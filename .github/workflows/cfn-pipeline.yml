@@ -1,4 +1,4 @@
-name: CFN Test
+name: CFN Pipeline
 
 on:
   workflow_dispatch:
@@ -26,10 +26,26 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: ${{ github.event.inputs.region}}
 
-    - name: Deploy CFN Stack
-      id: TestStack
+    - name: Deploy Database CFN Stack
+      id: DatabaseStack
       uses: aws-actions/aws-cloudformation-github-deploy@master
       with:
-        name: TestStack
+        name: DatabaseDevStack
+        template: cfn/DatabaseTemplate.yaml
+        no-fail-on-empty-changeset: "1"
+
+    - name: Deploy Lambda CFN Stack
+      id: LambdaStack
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: LambdaDevStack
         template: cfn/LambdaTemplate.yaml
+        no-fail-on-empty-changeset: "1"
+
+    - name: Deploy Connect Core Components CFN Stack
+      id: CoreComponentsStack
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: ConnectCoreComponentsStack
+        template: cfn/ConnectCoreComponentsTemplate.yaml
         no-fail-on-empty-changeset: "1"
