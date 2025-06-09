@@ -1,0 +1,178 @@
+Description: Creates the lambda functions for the Amazon Connect solution
+
+Parameters:
+  ConnectInstanceArn:
+    Type: String
+    Default: arn:aws:connect:us-east-1:564079322395:instance/d6d8c7fd-627d-4774-ac2d-0511c25864d7
+    Description: ARN of Amazon Connect Instance
+  LambdaRoleArn:
+    Type: String
+    Default: arn:aws:iam::564079322395:role/ucc-Voice-Lambda-Service-Role
+    Description: ARN of the role that the Lambda functions will assume
+  AccountId:
+    Type: String
+    Default: 564079322395
+    Description: AWS Account Id
+
+Resources:
+  GetConfigLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: ucc-PSC-Lambda-GetConfig
+      Handler: index.getConfig
+      Role: !Ref LambdaRoleArn
+      Runtime: python3.11
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          
+          # Get the service resource.
+          dynamodb = boto3.resource('dynamodb')
+          
+          def getConfig(event, context):
+              # parse event
+              print("EVENT:::", event)
+              # Locale key to fetch from DynamoDB
+              localeKey = event.get('locale', 'PSC-Amer-EN')
+              table = dynamodb.Table('ucc-PSC-Table-Config')
+              response = table.get_item(
+                  Key={
+                      "id": localeKey
+                  }
+              )
+              item = response['Item']
+              print(item)
+            
+              # The item data might be stored as a JSON string or map, handle both:
+              item_data = item.get('data')
+              if isinstance(item_data, str):
+                  try:
+                      itemsLoaded = json.loads(item_data)
+                  except Exception as e:
+                      return {
+                          'statusCode': 500,
+                          'error': f"Failed to parse item data JSON: {str(e)}"
+                      }
+              elif isinstance(item_data, dict):
+                  itemsLoaded = item_data
+              else:
+                  itemsLoaded = {}
+          
+              print(itemsLoaded)
+          
+              result = {
+                  'statusCode': 200
+              }
+          
+              for x, y in itemsLoaded.items():
+                  print(x, y)
+                  result[x] = y
+          
+              return result
+  GetConfigLambdaAllowConnectInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - GetConfigLambda
+        - Arn
+      Principal: connect.amazonaws.com
+      SourceAccount: !Ref AccountId
+      SourceArn: !Ref ConnectInstanceArn
+  HolidayCheckerLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: ucc-PSC-Lambda-HolidayChecker
+      Handler: index.lambda_handler
+      Role: !Ref LambdaRoleArn
+      Runtime: python3.11
+      Layers:
+      - arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python311:20
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          from datetime import datetime
+          import pytz
+          
+          dynamodb = boto3.resource('dynamodb')
+          
+          TABLE_NAME = 'ucc-PSC-Table-Holiday'
+          
+          def lambda_handler(event, context):
+              print(event)
+              print(event['Details']['Parameters']['locale'])
+              print(event['Details']['Parameters']['timezone'])
+              # Get timezone from event or default to US/Eastern
+              timezone_str = event.get('timezone', event['Details']['Parameters']['timezone'])
+              try:
+                  tz = pytz.timezone(timezone_str)
+              except Exception as e:
+                  return {
+                      'statusCode': 400,
+                      'error': f'Invalid timezone: {timezone_str}'
+                  }
+          
+              # Get today's date in that timezone
+              now_tz = datetime.now(tz)
+              today_str = now_tz.strftime('%Y-%m-%d')
+          
+              # Locale key to fetch from DynamoDB
+              locale_key = event.get('locale', event['Details']['Parameters']['locale'])
+              table = dynamodb.Table(TABLE_NAME)
+          
+              try:
+                  # Fetch item from DynamoDB
+                  response = table.get_item(Key={'id': locale_key})
+              except Exception as e:
+                  return {
+                      'statusCode': 500,
+                      'error': f"DynamoDB get_item failed: {str(e)}"
+                  }
+          
+              if 'Item' not in response:
+                  return {
+                      'statusCode': 404,
+                      'error': f"Locale key '{locale_key}' not found in DynamoDB."
+                  }
+              item = response['Item']
+          
+              # The holiday data might be stored as a JSON string or map, handle both:
+              holidays_data = item.get('data')
+              if isinstance(holidays_data, str):
+                  try:
+                      holidays = json.loads(holidays_data)
+                  except Exception as e:
+                      return {
+                          'statusCode': 500,
+                          'error': f"Failed to parse holiday data JSON: {str(e)}"
+                      }
+              elif isinstance(holidays_data, dict):
+                  holidays = holidays_data
+              else:
+                  holidays = {}
+          
+              # Check if today is holiday
+              is_holiday = today_str in holidays
+              holiday_name = holidays.get(today_str, "")
+          
+              return {
+                  'statusCode': 200,
+                  'isHoliday': is_holiday,
+                  'holidayName': holiday_name,
+                  'dateChecked': today_str,
+                  'timezone': timezone_str
+              }
+  HolidayCheckerLambdaAllowConnectInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - HolidayCheckerLambda
+        - Arn
+      Principal: connect.amazonaws.com
+      SourceAccount: !Ref AccountId
+      SourceArn: !Ref ConnectInstanceArn
