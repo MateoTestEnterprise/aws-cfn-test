@@ -1,0 +1,33 @@
+Description: Creates the DynamoDB databases for the Amazon Connect solution
+
+Resources:
+  ConfigTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: ucc-PSC-Table-Config
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+  HolidaysTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: ucc-PSC-Table-Holiday
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
