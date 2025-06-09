@@ -1,0 +1,1047 @@
+Description: Creates hours of operation, queues, and routing profiles for the Amazon Connect solution
+
+Parameters:
+  ConnectInstaceArn:
+    Type: String
+    Default: arn:aws:connect:us-east-1:564079322395:instance/d6d8c7fd-627d-4774-ac2d-0511c25864d7
+    Description: ARN of Amazon Connect Instance
+  BasicQueueArn:
+    Type: String
+    Default: arn:aws:connect:us-east-1:564079322395:instance/d6d8c7fd-627d-4774-ac2d-0511c25864d7/queue/3d28f4ed-69ff-491d-9a4c-518218538a2c
+    Description: The ARN of the Basic Queue in your Amazon Connect instance
+
+Resources:
+  PSCChina:
+    Type: AWS::Connect::HoursOfOperation
+    Properties:
+      Config:
+      - Day: MONDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: TUESDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: THURSDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: FRIDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: WEDNESDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      Description: hours of Operation for CAT - PSC - China
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-China
+      TimeZone: Asia/Shanghai
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-China
+  PSCEurope:
+    Type: AWS::Connect::HoursOfOperation
+    Properties:
+      Config:
+      - Day: FRIDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: TUESDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: MONDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: WEDNESDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: THURSDAY
+        EndTime:
+          Hours: 16
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      Description: hours of Operation for CAT - PSC - Europe
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Europe
+      TimeZone: Europe/Paris
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Europe
+  PSCAmerica:
+    Type: AWS::Connect::HoursOfOperation
+    Properties:
+      Config:
+      - Day: WEDNESDAY
+        EndTime:
+          Hours: 15
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: MONDAY
+        EndTime:
+          Hours: 15
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: FRIDAY
+        EndTime:
+          Hours: 15
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: TUESDAY
+        EndTime:
+          Hours: 15
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      - Day: THURSDAY
+        EndTime:
+          Hours: 15
+          Minutes: 0
+        StartTime:
+          Hours: 8
+          Minutes: 0
+      Description: Caterpillar America hours of Operation
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC- America
+      TimeZone: America/Chicago
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC- America
+  PSCQueueAmericaNextGenEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America NextGen English
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-NextGen-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-NextGen-English
+  PSCQueueAmericaNextGenFrench:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America NextGen French
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-NextGen-French
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-NextGen-French
+  PSCQueueAmericaNextGenSpanish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America NextGen Spanish
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-NextGen-Spanish
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-NextGen-Spanish
+  PSCQueueAmericaProCureEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America ProCure English
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-ProCure-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-ProCure-English
+  PSCQueueAmericaProCureFrench:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America ProCure French
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-ProCure-French
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-ProCure-French
+  PSCQueueAmericaProCureSpanish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: America ProCure Spanish
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCAmerica
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-America-ProCure-Spanish
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-America-ProCure-Spanish
+  PSCQueueChinaNextGenChinese:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China NextGen  Chinese Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-NextGen-Chinese
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-NextGen-Chinese
+  PSCQueueChinaNextGenEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China NextGen English Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-NextGen-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-NextGen-English
+  PSCQueueChinaNextGenJapanese:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China NextGen Japanese Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-NextGen-Japanese
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-NextGen-Japanese
+  PSCQueueChinaProCureChinese:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China ProCure Chinese Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-ProCure-Chinese
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-ProCure-Chinese
+  PSCQueueChinaProCureEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China ProCure English Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-ProCure-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-ProCure-English
+  PSCQueueChinaProCureJapanese:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: China ProCure Japanese Queue
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCChina
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-China-ProCure-Japanese
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-China-ProCure-Japanese
+  PSCQueueEuropeNextGenDutch:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for PSC - Europe - NextGen - DU
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-NextGen-Dutch
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-NextGen-Dutch
+  PSCQueueEuropeNextGenEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for Europe - NextGen - EN
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-NextGen-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-NextGen-English
+  PSCQueueEuropeNextGenFrench:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for Europe - NextGen - French
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-NextGen-French
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-NextGen-French
+  PSCQueueEuropeNextGenPolish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for Europe - NextGen - Polish
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-NextGen-Polish
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-NextGen-Polish
+  PSCQueueEuropeProCureDutch:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for PSC - Europe - ProCure - DU
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-ProCure-Dutch
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-ProCure-Dutch
+  PSCQueueEuropeProCureEnglish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for  Europe - ProCure - EN
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-ProCure-English
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-ProCure-English
+  PSCQueueEuropeProCureFrench:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for Europe - ProCure - French
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-ProCure-French
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-ProCure-French
+  PSCQueueEuropeProCurePolish:
+    Type: AWS::Connect::Queue
+    Properties:
+      Description: Queue for Europe - ProCure - Polish
+      HoursOfOperationArn:
+        Fn::GetAtt:
+        - PSCEurope
+        - HoursOfOperationArn
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      Name: PSC-Queue-Europe-ProCure-Polish
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Queue-Europe-ProCure-Polish
+  PSCProfileAmerEurope1:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe One
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope1
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenPolish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope1
+  PSCProfileAmerEurope2:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe Two
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope2
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenPolish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope2
+  PSCProfileAmerEurope3:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe Three
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope3
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenEnglish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope3
+  PSCProfileAmerEurope4:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe four
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope4
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenFrench
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureFrench
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureFrench
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeNextGenFrench
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope4
+  PSCProfileAmerEurope5:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe Five
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope5
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenSpanish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope5
+  PSCProfileAmerEurope6:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe Six
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope6
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCurePolish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueEuropeProCureEnglish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope6
+  PSCProfileAmerEurope7:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For America Europe Seven
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-AmerEurope7
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaProCureSpanish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueAmericaNextGenSpanish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-AmerEurope7
+  PSCProfileChina1:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For China One
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-China1
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureChinese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaNextGenJapanese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaNextGenEnglish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-China1
+  PSCProfileChina2:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: PSC profile China Two
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-China2
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureChinese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaNextGenEnglish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-China2
+  PSCProfileChina3:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For China Three
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-China3
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureJapanese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaNextGenJapanese
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-China3
+  PSCProfileChina4:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For China Four
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-China4
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureChinese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureEnglish
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureJapanese
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-China4
+  PSCProfileChina5:
+    Type: AWS::Connect::RoutingProfile
+    Properties:
+      DefaultOutboundQueueArn:
+        Ref: BasicQueueArn
+      Description: Routing Profile For China five
+      InstanceArn:
+        Ref: ConnectInstaceArn
+      MediaConcurrencies:
+      - Channel: VOICE
+        Concurrency: 1
+        CrossChannelBehavior:
+          BehaviorType: ROUTE_CURRENT_CHANNEL_ONLY
+      Name: PSC-Profile-China5
+      QueueConfigs:
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureChinese
+            - QueueArn
+      - Delay: 0
+        Priority: 1
+        QueueReference:
+          Channel: VOICE
+          QueueArn:
+            Fn::GetAtt:
+            - PSCQueueChinaProCureEnglish
+            - QueueArn
+    Metadata:
+      aws:cdk:path: ConnectCoreComponentsStack/PSC-Profile-China5
