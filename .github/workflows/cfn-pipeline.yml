@@ -6,7 +6,7 @@ on:
       region:
         description: 'AWS Region'
         required: true
-        default: 'eu-east-1'
+        default: 'us-east-1'
 
 jobs:
   cluster:
