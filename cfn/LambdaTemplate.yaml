@@ -70,6 +70,7 @@ Resources:
                   result[x] = y
           
               return result
+              
   GetConfigLambdaAllowConnectInvoke:
     Type: AWS::Lambda::Permission
     Properties:
@@ -81,6 +82,7 @@ Resources:
       Principal: connect.amazonaws.com
       SourceAccount: !Ref AccountId
       SourceArn: !Ref ConnectInstanceArn
+
   HolidayCheckerLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -88,59 +90,62 @@ Resources:
       Handler: index.lambda_handler
       Role: !Ref LambdaRoleArn
       Runtime: python3.11
-      Layers:
-      - arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python311:20
       Code:
         ZipFile: |
           import json
           import boto3
           from datetime import datetime
-          import pytz
-          
+          from zoneinfo import ZoneInfo
+
           dynamodb = boto3.resource('dynamodb')
-          
           TABLE_NAME = 'ucc-PSC-Table-Holiday'
-          
+
           def lambda_handler(event, context):
               print(event)
               print(event['Details']['Parameters']['locale'])
               print(event['Details']['Parameters']['timezone'])
+
               # Get timezone from event or default to US/Eastern
               timezone_str = event.get('timezone', event['Details']['Parameters']['timezone'])
+              print(timezone_str)
               try:
-                  tz = pytz.timezone(timezone_str)
+                  tz = ZoneInfo(timezone_str)
+                  print(tz)
               except Exception as e:
                   return {
                       'statusCode': 400,
                       'error': f'Invalid timezone: {timezone_str}'
                   }
-          
+
               # Get today's date in that timezone
               now_tz = datetime.now(tz)
               today_str = now_tz.strftime('%Y-%m-%d')
-          
+              print(today_str)
               # Locale key to fetch from DynamoDB
               locale_key = event.get('locale', event['Details']['Parameters']['locale'])
+              print(locale_key)
               table = dynamodb.Table(TABLE_NAME)
-          
+
               try:
                   # Fetch item from DynamoDB
                   response = table.get_item(Key={'id': locale_key})
+                  print(response)
               except Exception as e:
                   return {
                       'statusCode': 500,
                       'error': f"DynamoDB get_item failed: {str(e)}"
                   }
-          
+
               if 'Item' not in response:
                   return {
                       'statusCode': 404,
                       'error': f"Locale key '{locale_key}' not found in DynamoDB."
                   }
+
               item = response['Item']
-          
-              # The holiday data might be stored as a JSON string or map, handle both:
               holidays_data = item.get('data')
+
+              # Parse holiday data if needed
               if isinstance(holidays_data, str):
                   try:
                       holidays = json.loads(holidays_data)
@@ -153,11 +158,11 @@ Resources:
                   holidays = holidays_data
               else:
                   holidays = {}
-          
+
               # Check if today is holiday
               is_holiday = today_str in holidays
               holiday_name = holidays.get(today_str, "")
-          
+
               return {
                   'statusCode': 200,
                   'isHoliday': is_holiday,
@@ -165,6 +170,7 @@ Resources:
                   'dateChecked': today_str,
                   'timezone': timezone_str
               }
+
   HolidayCheckerLambdaAllowConnectInvoke:
     Type: AWS::Lambda::Permission
     Properties:
